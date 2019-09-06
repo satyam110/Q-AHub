@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">Q&amp;A Hub</string>
+    <string name="title_home">Home</string>
+    <string name="title_answer">Answer</string>
+    <string name="title_search">Search</string>
+    <string name="title_profile">Profile</string>
+
+
+    <string name="ask_question">Ask a Question</string>
+    <string name="ask_button">Ask</string>
+    <string name="register_heading">Register as Answrer</string>
+    <string name="register_fname">Enter First Name</string>
+    <string name="register_lname">Enter Last Name</string>
+    <string name="register_email">Enter Email</string>
+    <string name="register_ph_no">Enter Phone Number</string>
+    <string name="register_domain">Enter your Domain</string>
+    <string name="register_write_something">Write something about your domain</string>
+    <string name="register_password">Enter your password</string>
+    <string name="register_re_enter_password">Re-Enter password</string>
+    <string name="register_button_choose">Choose</string>
+    <string name="register_button_become">Become Answrer</string>
+    <string name="login_email">Enter your Registered email</string>
+    <string name="login_password">Enter the password</string>
+    <string name="login_as_answrer">Sign In</string>
+    <string name="login_button_login">Login</string>
+    <string name="button">Button</string>
+    <string-array name="domains">
+        <item name="Computer Science">Computer Science</item>
+        <item name="Information Technology">Information Technology</item>
+        <item name="Electronics">Electronics</item>
+        <item name="Hardware and Networking">Hardware &amp; Networking</item>
+        <item name="Electrical">Electrical</item>
+    </string-array>
+    <string name="input_error_name">name required</string>
+    <string name="input_error_email">email required</string>
+    <string name="input_error_password">password required</string>
+    <string name="input_error_phone">phone required</string>
+    <string name="input_error_password_length">password should be atleast 6 characters long</string>
+    <string name="input_error_phone_invalid">enter a valid phone number</string>
+    <string name="registration_success">Registered Successfully</string>
+    <string name="input_error_email_invalid">enter a valid email</string>
+    <string name="input_password_not_match">Passwords did not match</string>
+</resources>
