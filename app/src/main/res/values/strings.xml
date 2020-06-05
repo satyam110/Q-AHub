@@ -1,13 +1,18 @@
 <resources>
     <string name="app_name">Q&amp;A Hub</string>
     <string name="title_home">No questions to answer..</string>
-    <string name="title_answer">Answer</string>
-    <string name="title_search">Search</string>
-    <string name="title_profile">Profile</string>
+    <string name="bn_home">Home</string>
+    <string name="bn_ask">Ask</string>
+    <string name="bn_search">Search</string>
+    <string name="bn_profile">Profile</string>
 
 
     <string name="ask_question">Ask a Question</string>
+    <string name="question">Question</string>
     <string name="ask_button">Ask</string>
+    <string name="ans_button">Answer</string>
+    <string name="qa_back">Back</string>
+    <string name="sel_src">Select Action</string>
     <string name="register_heading">Register as Answrer</string>
     <string name="register_fname">Enter First Name</string>
     <string name="register_lname">Enter Last Name</string>
@@ -23,6 +28,7 @@
     <string name="login_password">Enter the password</string>
     <string name="login_as_answrer">Sign In</string>
     <string name="login_button_login">Login</string>
+    <string name="logout_button">Logout</string>
     <string name="button">Button</string>
     <string-array name="domains">
         <item name="Computer Science">Computer Science</item>

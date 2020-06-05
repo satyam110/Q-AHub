@@ -3,9 +3,12 @@ package com.example.qa_hub;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -21,24 +24,22 @@ import com.google.firebase.auth.FirebaseAuth;
 public class AnswrerLogin extends AppCompatActivity implements View.OnClickListener{
     EditText login_mail,login_pass;
     private FirebaseAuth mAuth;
-    private TextView mTextMessage;
-
+    private TextView bnTextMessage;
+   // SharedPreferences sharedPreferences;
+  //  SharedPreferences.Editor editor;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
+                    bnTextMessage.setText(R.string.bn_home);
                     return true;
                 case R.id.navigation_answer:
-                    mTextMessage.setText(R.string.title_answer);
-                    return true;
-                case R.id.navigation_search:
-                    mTextMessage.setText(R.string.title_search);
+                    bnTextMessage.setText(R.string.bn_ask);
                     return true;
                 case R.id.navigation_profile:
-                    mTextMessage.setText(R.string.title_profile);
+                    bnTextMessage.setText(R.string.bn_profile);
                     return true;
             }
             return false;
@@ -51,13 +52,17 @@ public class AnswrerLogin extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_answrer_login);
         login_mail = findViewById(R.id.login_mail);
         login_pass = findViewById(R.id.login_pass);
+
         findViewById(R.id.signup_now).setOnClickListener(this);
-        //findViewById(R.id.forgot_pw).setOnClickListener(this);
+        findViewById(R.id.forgot_pw).setOnClickListener(this);
         findViewById(R.id.btnLogin).setOnClickListener(this);
         mAuth = FirebaseAuth.getInstance();
         // Code for Bottom navigation bar starts here
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        mTextMessage = findViewById(R.id.message);
+        bnTextMessage = findViewById(R.id.message);
+        Menu menu = navView.getMenu();
+        MenuItem menuItem = menu.getItem(2);
+        menuItem.setChecked(true);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.nav_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -74,13 +79,8 @@ public class AnswrerLogin extends AppCompatActivity implements View.OnClickListe
                         intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent2);
                         break;
-                        case R.id.navigation_search:
-                        Intent intent3 = new Intent(AnswrerLogin.this, SearchQuestions.class);
-                        intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent3);
-                        break;
                         case R.id.navigation_profile:
-                        Intent intent4 = new Intent(AnswrerLogin.this, AnsRegister.class);
+                        Intent intent4 = new Intent(AnswrerLogin.this, AnswrerLogin.class);
                         intent4.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent4);
                         break;
@@ -119,8 +119,8 @@ private void userLogin(){
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                   Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
                 }else{
@@ -131,15 +131,15 @@ private void userLogin(){
     }
 }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//
-//        if(mAuth.getCurrentUser() != null){
-//            finish();
-//            startActivity(new Intent(this, MainActivity.class));
-//        }
-//    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if(mAuth.getCurrentUser() != null){
+           // finish();
+            startActivity(new Intent(this, UserDashboard.class));
+        }
+    }
 
     @Override
     public void onClick(View view){
@@ -148,6 +148,24 @@ private void userLogin(){
                 startActivity(new Intent(this,AnsRegister.class));
             case R.id.btnLogin:
                     userLogin();
+                break;
+            case R.id.forgot_pw:
+                String usrmail = login_mail.getText().toString();
+                if(!usrmail.equalsIgnoreCase("")){
+                    mAuth.sendPasswordResetEmail(usrmail).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                Toast.makeText(AnswrerLogin.this,"Please Check Your email for reseting your password!",Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                Toast.makeText(AnswrerLogin.this,"Error resending password",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }else{
+                    Toast.makeText(AnswrerLogin.this,"Please enter valid email!",Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }

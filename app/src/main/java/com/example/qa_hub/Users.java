@@ -12,4 +12,8 @@ public class Users {
         this.phone = phone;
         this.field = field;
     }
+
+    public String getField() {
+        return field;
+    }
 }

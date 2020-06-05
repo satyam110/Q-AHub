@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:layout_margin="20dp"
+    android:padding="20dp"
+    tools:context=".UserDashboard">
+
+    <TextView
+        android:id="@+id/tv_ques"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="@string/question"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="25sp"
+        />
+
+    <TextView
+        android:id="@+id/tv_answer"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="10dp"
+        android:padding="20dp"
+        android:background="@drawable/register_design"
+        android:ems="10"
+        android:scrollbars="vertical"
+        android:textSize="20sp"
+        android:textColor="@color/black" />
+        <!--android:gravity="start|top"-->
+
+
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="110dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/register_design"
+        android:text="@string/qa_back"
+        />
+
+
+
+</LinearLayout>

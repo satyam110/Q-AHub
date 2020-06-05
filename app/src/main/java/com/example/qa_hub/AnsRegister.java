@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,10 +20,15 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class AnsRegister extends AppCompatActivity implements AdapterView.OnItemSelectedListener,View.OnClickListener {
@@ -29,7 +36,7 @@ public class AnsRegister extends AppCompatActivity implements AdapterView.OnItem
     String domainVal;
     FirebaseAuth mAuth;
     ProgressDialog progressDialog;
-    private TextView mTextMessage;
+    private TextView bnTextMessage;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -37,18 +44,16 @@ public class AnsRegister extends AppCompatActivity implements AdapterView.OnItem
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
+                    bnTextMessage.setText(R.string.bn_home);
                     return true;
                 case R.id.navigation_answer:
-                    mTextMessage.setText(R.string.title_answer);
-                    return true;
-                case R.id.navigation_search:
-                    mTextMessage.setText(R.string.title_search);
+                    bnTextMessage.setText(R.string.bn_ask);
                     return true;
                 case R.id.navigation_profile:
-                    mTextMessage.setText(R.string.title_profile);
+                    bnTextMessage.setText(R.string.bn_profile);
                     return true;
             }
+
             return false;
         }
     };
@@ -78,11 +83,14 @@ public class AnsRegister extends AppCompatActivity implements AdapterView.OnItem
 
 
 
-        mTextMessage = findViewById(R.id.message);
+        bnTextMessage = findViewById(R.id.message);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
 // Code for Bottom navigation bar starts here
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.nav_view);
+        Menu menu = navView.getMenu();
+        MenuItem menuItem = menu.getItem(2);
+        menuItem.setChecked(true);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -96,11 +104,6 @@ public class AnsRegister extends AppCompatActivity implements AdapterView.OnItem
                         Intent intent2 = new Intent(AnsRegister.this, AskQuestion.class);
                         intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent2);
-                        break;
-                        case R.id.navigation_search:
-                        Intent intent3 = new Intent(AnsRegister.this, SearchQuestions.class);
-                        intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent3);
                         break;
                         case R.id.navigation_profile:
                         Intent intent4 = new Intent(AnsRegister.this, AnsRegister.class);
@@ -119,7 +122,7 @@ public class AnsRegister extends AppCompatActivity implements AdapterView.OnItem
 
         if (mAuth.getCurrentUser() != null) {
 //            finish();
-//            startActivity(new Intent(this, MainActivity.class));
+           startActivity(new Intent(this, UserDashboard.class));
         }
     }
 
@@ -178,19 +181,30 @@ public class AnsRegister extends AppCompatActivity implements AdapterView.OnItem
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     progressDialog.dismiss();
                     if (task.isSuccessful()) {
-                        Users user = new Users(name, mail, phone, field);
-
+                        Users users = new Users(name, mail, phone, field);
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         FirebaseDatabase.getInstance().getReference("Users")
                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                .setValue(users).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
 
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(AnsRegister.this, getString(R.string.registration_success), Toast.LENGTH_LONG).show();
+                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                            .setDisplayName(name).build();
+                                    user.updateProfile(profileUpdates)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Toast.makeText(AnsRegister.this, getString(R.string.registration_success), Toast.LENGTH_LONG).show();
+                                                    }
+                                                }
+                                            });
+
                                     finish();
                                     //finish();
-                                    startActivity(new Intent(AnsRegister.this,MainActivity.class));
+                                    startActivity(new Intent(AnsRegister.this,UserDashboard.class));
                                     //full_name.setText(null);email.setText(null);mob.setText(null);pass.setText(null);
                                 } else {
                                     //display a failure message
@@ -227,6 +241,7 @@ public class AnsRegister extends AppCompatActivity implements AdapterView.OnItem
             case R.id.btnSignUp:
                 registerUser();
                 break;
+
         }
     }
 }
